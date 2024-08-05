@@ -16,6 +16,7 @@
 
   /* sizes */
   --timeline-width: 10rem;
+  --header-height: 4rem;
 }
 
 * {

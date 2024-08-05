@@ -17,20 +17,20 @@
       menu
     </icon>
   </button>
+  <Drawer open={menuOpen} on:close={toggleMenu}>
+    {#each headers as header}
+    <div class="drawer-links">
+      <a href="{header.to}">
+        <icon class="material-symbols-outlined">
+          {header.icon || ''}
+        </icon>
+        {header.text}
+      </a>
+    </div>
+    {/each}
+  </Drawer>
 </header>
 
-<Drawer open={menuOpen} on:close={toggleMenu}>
-  {#each headers as header}
-  <div class="drawer-links">
-    <a href="{header.to}">
-      <icon class="material-symbols-outlined">
-        {header.icon || ''}
-      </icon>
-      {header.text}
-    </a>
-  </div>
-  {/each}
-</Drawer>
 
 <script lang="ts">
   import { headers } from '$lib/header';
@@ -45,6 +45,10 @@
 
 <style>
   header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
     display: grid;
     width: 100%;
     background-color: var(--blue);
@@ -63,7 +67,7 @@
   }
 
   img {
-    height: 4rem;
+    height: calc(var(--header-height) - 1rem);
   }
 
   .links {

@@ -34,7 +34,7 @@
     right: 0;
     max-width: 50%;
     background-color: var(--blue);
-    z-index: 5;
+    z-index: 20;
   }
 
   .header {

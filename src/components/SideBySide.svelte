@@ -1,4 +1,4 @@
-<div class="side-by-side {!image || !content ? 'single-grid' : 'double-grid'}">
+<div class="side-by-side {!image || !content ? 'single-grid' : 'double-grid'}" id={itemId}>
   {#if image && !flipped}
     <div class="picture">
       <img src={image} alt="">
@@ -34,6 +34,7 @@
   export let image: string = '';
   export let content: string = '';
   export let flipped: boolean = false;
+  export let itemId: string = '';
 
   let parsedContent: string;
 

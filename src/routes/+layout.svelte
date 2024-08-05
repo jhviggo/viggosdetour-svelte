@@ -1,8 +1,11 @@
 <div class="main-layout">
-  <Header />
+  <div>
+    <Header />
+  </div>
   <div class="main-content">
     <slot />
   </div>
+
   <Footer />
 </div>
 
@@ -16,7 +19,7 @@
 <style>
   .main-layout {
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: var(--header-height) 1fr auto;
     min-height: 100%;
   }
 </style>
