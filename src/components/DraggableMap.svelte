@@ -13,7 +13,7 @@
 	export let left = 0;
 	export let top = 0;
 	export let mapUrl: string = '';
-	
+
 	let moving = false;
 	let container: HTMLElement;
 	let map: HTMLElement;

@@ -1,9 +1,11 @@
   <div class="page-content">
     <div class="map-area" bind:this={mapArea}>
-      <div class="map-frame" style="width: {mapFrameWidth}px;">
+      <div class="map-frame" style="width: {mapFrameWidth}px;" bind:this={mapFrame}>
         <DraggableMap mapUrl="/images/map.png">
-          <div class="dot" on:click={() => handleDot("t1")} aria-hidden="true">
-            <div class="hole"></div>
+          <div class="dot" on:click={() => handleDot("t1")} style="left: {160*offset}px; top: {99*offset}px;" aria-hidden="true">
+            <span class="material-symbols-outlined">
+              pin_drop
+            </span>
           </div>
         </DraggableMap>
       </div>
@@ -31,12 +33,16 @@
   let timeline: Timeline[] = [];
   let mapFrameWidth: number = 0;
   let mapArea: HTMLElement;
+  let mapFrame: HTMLElement;
+
+  let offset: number = 1;
 
   onMount(async (): Promise<any> => {
     timeline = await getTimelines();
 
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver(_ => {
       updateMapFrameWidth();
+      offset = mapFrame.clientHeight/848;
     });
     resizeObserver.observe(mapArea);
     return () => resizeObserver.unobserve(mapArea);
@@ -83,22 +89,6 @@
 
   .dot {
     position: absolute;
-    top: 103px;
-    left: 181px;
-    width: 0.8rem;
-    height: 0.8rem;
-    background-color: var(--blue);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .hole {
-    width: 0.4rem;
-    height: 0.4rem;
-    background-color: white;
-    border-radius: 50%;
   }
 
   @media (max-width: 768px) {
