@@ -2,19 +2,18 @@
     <div class="map-area" bind:this={mapArea}>
       <div class="map-frame" style="width: {mapFrameWidth}px;" bind:this={mapFrame}>
         <div class="marker-switch">
-          Toggle markers
+          <span style="margin-bottom: 0.25rem;">Toggle markers</span>
           <label class="switch">
             <input type="checkbox" bind:checked={showMarkers}>
             <span class="slider round"></span>
           </label>
         </div>
         <DraggableMap mapUrl="/images/map2.webp" bind:mapHeight={mapHeight} bind:realMapHeight={realMapHeight}>
-          <div class="marker" style="left: {207 * offset}px; top: {96 * offset}px;" on:click={() => handleMarker('t1')} aria-hidden="true">
+          {#each visibleMarkers as marker}
+          <div class="marker" style="left: calc({marker.left * offset}px - 0.5rem); top: calc({marker.top * offset}px - 0.5rem);" on:click={() => handleMarker(marker.itemId)} aria-hidden="true">
             <div style="background-color: {showMarkers ? 'var(--orange)' : ''};"></div>
           </div>
-          <div class="marker" style="left: {221 * offset}px; top: {230 * offset}px;" on:click={() => handleMarker('t2')} aria-hidden="true">
-            <div style="background-color: {showMarkers ? 'var(--orange)' : ''};"></div>
-          </div>
+          {/each}
         </DraggableMap>
       </div>
     </div>
@@ -41,6 +40,7 @@
   import { onMount, afterUpdate } from 'svelte';
   import { getTimelines, type Timeline } from '$lib/api'
   import DraggableMap from '$components/DraggableMap.svelte';
+  import { markers, type Marker } from '$lib/markers';
 
   let timeline: Timeline[] = [];
   let mapFrameWidth: number = 0;
@@ -49,6 +49,7 @@
   let mapHeight: number;
   let realMapHeight: number
   let showMarkers: boolean = true;
+  let visibleMarkers: Marker[] = [];
 
   let offset: number = 1;
 
@@ -59,6 +60,8 @@
     const resizeObserver = new ResizeObserver(_ => {
       updateMapFrameWidth();
       offset = (realMapHeight || 1)/mapHeight;
+      visibleMarkers = [...markers];
+
     });
     resizeObserver.observe(mapArea);
     return () => resizeObserver.unobserve(mapArea);
@@ -145,8 +148,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 56px;
+  height: 26px;
 }
 
 /* Hide default HTML checkbox */
@@ -172,10 +175,10 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 22px;
+  width: 22px;
   left: 4px;
-  bottom: 4px;
+  bottom: 2px;
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
@@ -197,7 +200,7 @@ input:checked + .slider:before {
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+  border-radius: 26px;
 }
 
 .slider.round:before {

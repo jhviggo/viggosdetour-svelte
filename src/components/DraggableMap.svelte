@@ -1,5 +1,5 @@
 <section class="drag-container" bind:this={container}>
-	<div on:mousedown={onMouseDown} bind:this={draggable} style="left: {left}px; top: {top}px;" class="draggable" aria-hidden="true">
+	<div on:mousedown={onMouseDown} bind:this={draggable} bind:clientHeight={realMapHeight} style="left: {left}px; top: {top}px;" class="draggable" aria-hidden="true">
 		<img src={mapUrl} alt="Map Url" bind:this={map}>
 		<div class="overlay">
 			<slot />
@@ -26,7 +26,6 @@
 	
 	onMount(() => {
 		mapHeight = map.naturalHeight;
-		realMapHeight = map.clientHeight;
 	});
 
 	function onMouseDown(e: Event) {
