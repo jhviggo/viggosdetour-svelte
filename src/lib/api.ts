@@ -9,6 +9,7 @@ interface Blog {
 }
 
 export interface Timeline {
+  id: number;
   itemId: string;
   date: string;
   location: string;

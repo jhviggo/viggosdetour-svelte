@@ -1,5 +1,10 @@
 export const headers = [
   {
+    text: 'Route',
+    to: '/',
+    icon: 'route',
+  },
+  {
     text: 'Blog',
     to: '/blog',
     icon: 'news',

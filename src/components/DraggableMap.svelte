@@ -10,16 +10,25 @@
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	export let left = 0;
 	export let top = 0;
 	export let mapUrl: string = '';
-
+	export let mapHeight: number = 0;
+	export let realMapHeight: number = 0;
+	
 	let moving = false;
 	let container: HTMLElement;
-	let map: HTMLElement;
+	let map: HTMLImageElement;
 	let mapMargin: number = 0;
 	let draggable: HTMLElement;
 	
+	onMount(() => {
+		mapHeight = map.naturalHeight;
+		realMapHeight = map.clientHeight;
+	});
+
 	function onMouseDown(e: Event) {
 		if (e.target !== draggable) {
 			return;

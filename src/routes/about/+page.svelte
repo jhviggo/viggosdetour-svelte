@@ -1,5 +1,5 @@
 <div class="page">
-  <img src="/images/countries-banner.png" class="banner" alt="collage showing differnet countries I've been to">
+  <img src="/images/countries-banner.webp" class="banner" alt="collage showing differnet countries I've been to">
   <div class="text">
     {@html text}
   </div>

@@ -1,23 +1,35 @@
   <div class="page-content">
     <div class="map-area" bind:this={mapArea}>
       <div class="map-frame" style="width: {mapFrameWidth}px;" bind:this={mapFrame}>
-        <DraggableMap mapUrl="/images/map.png">
-          <div class="dot" on:click={() => handleDot("t1")} style="left: {160*offset}px; top: {99*offset}px;" aria-hidden="true">
-            <span class="material-symbols-outlined">
-              pin_drop
-            </span>
+        <div class="marker-switch">
+          Toggle markers
+          <label class="switch">
+            <input type="checkbox" bind:checked={showMarkers}>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <DraggableMap mapUrl="/images/map2.webp" bind:mapHeight={mapHeight} bind:realMapHeight={realMapHeight}>
+          <div class="marker" style="left: {207 * offset}px; top: {96 * offset}px;" on:click={() => handleMarker('t1')} aria-hidden="true">
+            <div style="background-color: {showMarkers ? 'var(--orange)' : ''};"></div>
+          </div>
+          <div class="marker" style="left: {221 * offset}px; top: {230 * offset}px;" on:click={() => handleMarker('t2')} aria-hidden="true">
+            <div style="background-color: {showMarkers ? 'var(--orange)' : ''};"></div>
           </div>
         </DraggableMap>
       </div>
     </div>
     <div class="divider"></div>
     <div>
-      <SideBySide image="/images/banner.jpg">
-        <div class="over-banner" slot="hover"></div>
-      </SideBySide>
+      <div class="space">
+        <SideBySide image="/images/banner.webp">
+          <div class="over-banner" slot="hover"></div>
+        </SideBySide>
+      </div>
     
       {#each timeline as item}
-          <SideBySide image="{item.image}" content="{item.content}" itemId={item.itemId} />
+        <div class="space">
+          <SideBySide image="{item.image}" content="{item.content}" itemId={item.itemId} flipped={item.id % 2 == 1}/>
+        </div>
       {/each}
 
     </div>
@@ -34,15 +46,19 @@
   let mapFrameWidth: number = 0;
   let mapArea: HTMLElement;
   let mapFrame: HTMLElement;
+  let mapHeight: number;
+  let realMapHeight: number
+  let showMarkers: boolean = true;
 
   let offset: number = 1;
 
   onMount(async (): Promise<any> => {
     timeline = await getTimelines();
+    timeline.sort((a, b) => b.id - a.id);
 
     const resizeObserver = new ResizeObserver(_ => {
       updateMapFrameWidth();
-      offset = mapFrame.clientHeight/848;
+      offset = (realMapHeight || 1)/mapHeight;
     });
     resizeObserver.observe(mapArea);
     return () => resizeObserver.unobserve(mapArea);
@@ -57,7 +73,7 @@
     mapFrameWidth = mapArea?.clientWidth;
   }
 
-  function handleDot(itemId: string) {
+  function handleMarker(itemId: string) {
     document.getElementById(itemId)?.scrollIntoView({ behavior: "smooth" });
   }
 </script>
@@ -83,12 +99,23 @@
     width: 100%;
   }
 
-  .dot:hover {
+  .marker:hover {
     cursor: pointer;
   }
 
-  .dot {
+  .marker {
     position: absolute;
+    opacity: 0.75;
+  }
+
+  .marker div {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+  }
+
+  .space {
+    margin-bottom: 2rem;
   }
 
   @media (max-width: 768px) {
@@ -100,4 +127,80 @@
       display: none;
     }
   }
+
+  .marker-switch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--blue);
+    color: white;
+    position: absolute;
+    padding: 0.5rem;
+    top: 0;
+    right: 5px;
+    z-index: 2;border-radius: 0 0 2rem 2rem;
+  }
+
+  /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: var(--orange);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--orange);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>

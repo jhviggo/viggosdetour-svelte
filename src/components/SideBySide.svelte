@@ -50,6 +50,7 @@
   .side-by-side {
     display: grid;
     background-color: white;
+    scroll-margin-top: 5rem;
   }
   
   .single-grid { grid-template-columns: 1fr; }
