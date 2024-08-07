@@ -1,5 +1,5 @@
 <div class="page">
-  <img src="/images/bike-banner.webp" alt="Collage of my motorcycle">
+  <Banner image="/images/bike-banner.webp" imageAlt="Collage of my motorcycle" />
   <h1 class="orange">Meet the <span class="blue">bike</span>, the <span class="blue">bag</span> and the <span class="blue">plan</span></h1>
   Let's take a quick look at the bike, what I'm bringing and the intended route
 
@@ -12,6 +12,7 @@
 
 <script lang="ts">
   import SideBySide from '$components/SideBySide.svelte';
+  import Banner from '$components/Banner.svelte';
 </script>
 
 <style>

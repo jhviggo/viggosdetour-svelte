@@ -1,5 +1,5 @@
 <div class="page">
-  <img src="/images/countries-banner.webp" class="banner" alt="collage showing differnet countries I've been to">
+  <Banner image="/images/countries-banner.webp" imageAlt="collage showing differnet countries I've been to" />
   <div class="text">
     {@html text}
   </div>
@@ -9,6 +9,7 @@
   import { onMount } from 'svelte';
   import { marked } from 'marked';
   import { getContentFile } from '$lib/api';
+  import Banner from '$components/Banner.svelte';
 
   let text: string = '';
 
@@ -19,10 +20,6 @@
 </script>
 
 <style>
-  .banner {
-    width: 100%;
-  }
-
   .text {
     text-align: left;
   }

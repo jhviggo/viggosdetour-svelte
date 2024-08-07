@@ -1,5 +1,5 @@
 <section class="drag-container" bind:this={container}>
-	<div on:mousedown={onMouseDown} bind:this={draggable} bind:clientHeight={realMapHeight} style="left: {left}px; top: {top}px;" class="draggable" aria-hidden="true">
+	<div on:mousedown={onMouseDown} bind:this={draggable} bind:clientHeight={realMapHeight} bind:clientWidth={realMapWidth} style="left: {left}px; top: {top}px;" class="draggable" aria-hidden="true">
 		<img src={mapUrl} alt="Map Url" bind:this={map}>
 		<div class="overlay">
 			<slot />
@@ -17,6 +17,7 @@
 	export let mapUrl: string = '';
 	export let mapHeight: number = 0;
 	export let realMapHeight: number = 0;
+	export let realMapWidth: number = 0;
 	
 	let moving = false;
 	let container: HTMLElement;
@@ -29,7 +30,7 @@
 	});
 
 	function onMouseDown(e: Event) {
-		if (e.target !== draggable) {
+		if (e.target !== draggable && (e.target as HTMLElement).tagName !== 'CANVAS' && (e.target as HTMLElement).getAttribute('data-clickable') === 'true') {
 			return;
 		}
 		moving = true;
@@ -87,5 +88,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+		height: 100%;
+		width: 100%;
 	}
 </style>

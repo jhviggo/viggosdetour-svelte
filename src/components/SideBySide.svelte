@@ -1,11 +1,6 @@
 <div class="side-by-side {!image || !content ? 'single-grid' : 'double-grid'}" id={itemId}>
   {#if image && !flipped}
-    <div class="picture">
-      <img src={image} alt="">
-      <div class="image-hover">
-        <slot name="hover" />
-      </div>
-    </div>
+    <img src={image} alt="">
   {/if}
   {#if content}
     <div class="content">
@@ -19,9 +14,7 @@
   {#if image && flipped}
     <div class="picture">
       <img src={image} alt="">
-      <div class="image-hover">
-        <slot name="hover" />
-      </div>
+      <slot name="hover" />
     </div>
   {/if}
 </div>
@@ -51,6 +44,11 @@
     display: grid;
     background-color: white;
     scroll-margin-top: 5rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border-bottom: 2px solid var(--blue);
+    border-right: 2px solid var(--blue);
   }
   
   .single-grid { grid-template-columns: 1fr; }
@@ -72,15 +70,6 @@
     position: relative;
     display: grid;
     align-items: center;
-  }
-  
-  .image-hover {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    overflow: hidden;
   }
   
   .content {
