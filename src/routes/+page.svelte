@@ -58,16 +58,25 @@
 
   let offset: number = 1;
 
+  $: if (realMapHeight) {
+    debounce(() => updateMapMarkers())();
+  }
+
+  function debounce(func: Function, timeout = 5){
+    let timer: number;
+    return (...args: any[]) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this as any, args); }, timeout);
+    };
+  }
+
   onMount(async (): Promise<any> => {
     timeline = await getTimelines();
     timeline.sort((a, b) => b.id - a.id);
     
     const resizeObserver = new ResizeObserver(_ => {
       updateMapFrameWidth();
-      offset = (realMapHeight || 1)/mapHeight;
-      visibleMarkers = [...markers.sort((a, b) => a.id - b.id)];
-      console.log(visibleMarkers);
-      drawCanvasLines();
+      updateMapMarkers();
     });
     resizeObserver.observe(mapArea);
     return () => resizeObserver.unobserve(mapArea);
@@ -78,6 +87,12 @@
     updateMapFrameWidth();
   });
 
+  function updateMapMarkers() {
+    offset = (realMapHeight || 1)/mapHeight;
+    visibleMarkers = [...markers.sort((a, b) => a.id - b.id)];
+    drawCanvasLines();
+  }
+
   function updateMapFrameWidth() {
     mapFrameWidth = mapArea?.clientWidth;
   }
@@ -85,7 +100,11 @@
   function handleMarker(itemId: string) {
     const scrollHeight = document.getElementById(itemId)?.scrollHeight;
     if (scrollHeight) {
-      window.scrollTo(0, scrollHeight);
+      window.scrollTo({
+        left: 0,
+        top: scrollHeight,
+        behavior: 'smooth',
+      });
     }
   }
 
@@ -94,12 +113,11 @@
     if (!ctx) return;
 
     ctx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
-
-    console.log(ctx);
     const lineSegmentLength = mapCanvas.width/400;
 
     ctx.moveTo(0, 0);
     for (let i = 0; i < markers.length-1; i++) {
+      console.log('drawing at', markers[i].left * offset, markers[i].top * offset, 'based on', realMapHeight, mapHeight)
       ctx.beginPath();
       ctx.lineWidth = 4;
       ctx.strokeStyle = '#ff8225';

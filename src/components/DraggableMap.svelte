@@ -1,5 +1,5 @@
 <section class="drag-container" bind:this={container}>
-	<div on:mousedown={onMouseDown} bind:this={draggable} bind:clientHeight={realMapHeight} bind:clientWidth={realMapWidth} style="left: {left}px; top: {top}px;" class="draggable" aria-hidden="true">
+	<div class="draggable" on:mousedown={onMouseDown} on:wheel={onScroll} bind:this={draggable} bind:clientHeight={realMapHeight} bind:clientWidth={realMapWidth} style="left: {left}px; top: {top/2}px; height: {mapSize}dvh;" aria-hidden="true">
 		<img src={mapUrl} alt="Map Url" bind:this={map}>
 		<div class="overlay">
 			<slot />
@@ -24,6 +24,13 @@
 	let map: HTMLImageElement;
 	let mapMargin: number = 0;
 	let draggable: HTMLElement;
+	let mapSize: number = 100;
+
+	const mapSizeModifier: number = 10;
+	const maxZoom = 150;
+	const minZoom = 50;
+
+	$: if(realMapHeight) { preventMapOffScreen(); }
 	
 	onMount(() => {
 		mapHeight = map.naturalHeight;
@@ -35,12 +42,29 @@
 		}
 		moving = true;
 	}
+
+	function onScroll(e: WheelEvent) {
+		e.preventDefault();
+
+		if (e.deltaY < 0 && mapSize + mapSizeModifier < maxZoom) {
+			// zoom in
+			mapSize += mapSizeModifier;
+		} else if (e.deltaY > 0 && mapSize - mapSizeModifier > minZoom) {
+			// zoom out
+			mapSize -= mapSizeModifier;
+		}
+	}
 	
 	function onMouseMove(e: MouseEvent) {
-		if (moving) {
-			left += e.movementX;
-			top += e.movementY;
-		}
+		if (!moving) return;
+	
+		left += e.movementX;
+		top += e.movementY;
+		preventMapOffScreen();
+	}
+
+	function preventMapOffScreen() {
+		if (!container) return;
 
 		if (left > 0 + mapMargin) {
 			left = 0 + mapMargin;
@@ -75,13 +99,12 @@
 		cursor: move;
 		border: solid 1px gray;
 		position: absolute;
-		height: 100dvh;
 	}
 
 	img {
 		display: grid;
 		pointer-events: none;
-		height: 100dvh;
+		height: 100%;
 	}
 
 	.overlay {
