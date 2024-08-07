@@ -20,7 +20,7 @@
   <Drawer open={menuOpen} on:close={toggleMenu}>
     {#each headers as header}
     <div class="drawer-links">
-      <a href="{header.to}">
+      <a href="{header.to}" on:click={() => menuOpen = false}>
         <icon class="material-symbols-outlined">
           {header.icon || ''}
         </icon>
