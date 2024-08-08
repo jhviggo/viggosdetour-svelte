@@ -66,7 +66,8 @@
     let timer: number;
     return (...args: any[]) => {
       clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this as any, args); }, timeout);
+      // @ts-ignore
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
     };
   }
 
@@ -117,7 +118,6 @@
 
     ctx.moveTo(0, 0);
     for (let i = 0; i < markers.length-1; i++) {
-      console.log('drawing at', markers[i].left * offset, markers[i].top * offset, 'based on', realMapHeight, mapHeight)
       ctx.beginPath();
       ctx.lineWidth = 4;
       ctx.strokeStyle = '#ff8225';
