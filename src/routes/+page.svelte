@@ -1,10 +1,6 @@
 <div class="page-content">
   <div class="map-area" bind:this={mapArea}>
     <div class="map-frame" style="width: {mapFrameWidth}px;" bind:this={mapFrame}>
-      <div class="marker-switch">
-        <span style="margin-bottom: 0.5rem;">Toggle markers</span>
-        <Toggler bind:showMarkers={showMarkers} />
-      </div>
       <DraggableMap mapUrl="/images/map2.webp" bind:mapHeight={mapHeight} bind:realMapHeight={realMapHeight} bind:realMapWidth={realMapWidth}>
         <canvas class="mapCanvas" bind:this={mapCanvas} width={realMapWidth} height={realMapHeight} style="display: {showMarkers ? 'unset': 'none'};"></canvas>
         {#each visibleMarkers as marker}
@@ -42,7 +38,6 @@
   import { getTimelines, type Timeline } from '$lib/api'
   import DraggableMap from '$components/DraggableMap.svelte';
   import { markers, type Marker } from '$lib/markers';
-  import Toggler from '$components/Toggler.svelte';
   import Banner from '$components/Banner.svelte';
 
   let timeline: Timeline[] = [];
@@ -181,27 +176,5 @@
     .map-area {
       display: none;
     }
-  }
-
-  .marker-switch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: var(--blue);
-    position: absolute;
-    padding: 0.5rem;
-    top: 0;
-    right: 5px;
-    z-index: 2;
-    border-radius: 0 0 1rem 1rem;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 13px -3px inset;
-  }
-
-  .marker-switch:hover {
-    margin-top: 0;
-  }
-
-  .marker-switch span {
-    color: white;
   }
 </style>

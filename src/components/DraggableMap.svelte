@@ -1,6 +1,6 @@
 <section class="drag-container" bind:this={container}>
-	<div class="draggable" on:mousedown={onMouseDown} on:wheel={onScroll} bind:this={draggable} bind:clientHeight={realMapHeight} bind:clientWidth={realMapWidth} style="left: {left}px; top: {top/2}px; height: {mapSize}dvh;" aria-hidden="true">
-		<img src={mapUrl} alt="Map Url" bind:this={map}>
+	<div class="draggable" on:mousedown={onMouseDown} on:wheel={onScroll} bind:this={draggable} bind:clientHeight={realMapHeight} bind:clientWidth={realMapWidth} style="left: {left}px; top: {container?.clientHeight > realMapHeight ? top/2 : top}px; height: {mapSize}dvh;" aria-hidden="true">
+		<img src={mapUrl} alt="Map Url" draggable="false" bind:this={map}>
 		<div class="overlay">
 			<slot />
 		</div>
@@ -66,6 +66,9 @@
 	function preventMapOffScreen() {
 		if (!container) return;
 
+		//console.log(container.clientHeight * (mapSize/100), 'x', container.clientWidth * (mapSize/100));
+		console.log(map.clientHeight, 'x', map.clientWidth);
+		
 		if (left > 0 + mapMargin) {
 			left = 0 + mapMargin;
 		}
@@ -77,6 +80,7 @@
 		}
 		if (top < -map.clientHeight - mapMargin + container.clientHeight) {
 			top = -map.clientHeight - mapMargin + container.clientHeight;
+			console.log(-map.clientHeight, '+', container.clientHeight, '=', top);
 		}
 	}
 	
