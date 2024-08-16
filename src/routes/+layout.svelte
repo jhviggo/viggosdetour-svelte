@@ -10,6 +10,23 @@
       gtag('config', 'G-1JXNZFG1DP');
     </script>
   {/if}
+
+  <meta name="description" content="My motorcycle trip from Denmark To Japan. My name is Viggo, I'm a software engineer who decided to take my Master's in Japan and will be driving there. I'll be documenting how much it costs, how to get the carnet de passage and all the details on the way">
+  <meta name="keywords" content="Travel, Motorcycle, Camping, Software Engineer, Viggo">
+  <meta name="author" content="Viggo Petersen">
+
+  <meta property="og:title" content="Viggo's Detour" />
+  <meta property="og:description" content="My motorcycle trip from Denmark To Japan. My name is Viggo, I'm a software engineer who decided to take my Master's in Japan and will be driving there. I'll be documenting how much it costs, how to get the carnet de passage and all the details on the way" />
+  <meta property="og:image" content="https://viggosdetour.com/images/map.webp" />
+  <meta property="og:image:alt" content="World map showing a route from Denmark to India, zig-zagging through many different countries on the way" />
+
+  <meta name="twitter:title" content="Viggo's Detour" />
+  <meta name="twitter:description" content="My motorcycle trip from Denmark To Japan. My name is Viggo, I'm a software engineer who decided to take my Master's in Japan and will be driving there. I'll be documenting how much it costs, how to get the carnet de passage and all the details on the way" />
+  <meta name="twitter:url" content="https://viggosdetour.com/" />
+  <meta name="twitter:image:src" content="https://viggosdetour.com/images/map.webp" />
+  <meta name="twitter:image:alt" content="World map showing a route from Denmark to India, zig-zagging through many different countries on the way" />
+
+  <title>Viggo's Detour</title>
 </svelte:head>
 
 <div class="main-layout">
