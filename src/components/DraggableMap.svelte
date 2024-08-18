@@ -1,121 +1,60 @@
-<section class="drag-container" bind:this={container}>
-	<div class="draggable" on:mousedown={onMouseDown} on:wheel={onScroll} bind:this={draggable} bind:clientHeight={realMapHeight} bind:clientWidth={realMapWidth} style="left: {left}px; top: {container?.clientHeight > realMapHeight ? top/2 : top}px; height: {mapSize}dvh;" aria-hidden="true">
-		<img src={mapUrl} alt="Map Url" draggable="false" bind:this={map}>
-		<div class="overlay">
-			<slot />
-		</div>
-	</div>
-</section>
-
-<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
+<div id="map"></div>
 
 <script lang="ts">
+	import 'leaflet/dist/leaflet.css';
 	import { onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
+	import { markers, points } from '$lib/mapMarkers';
 
-	export let left = 0;
-	export let top = 0;
-	export let mapUrl: string = '';
-	export let mapHeight: number = 0;
-	export let realMapHeight: number = 0;
-	export let realMapWidth: number = 0;
+	const dispatch = createEventDispatcher();
 	
-	let moving = false;
-	let container: HTMLElement;
-	let map: HTMLImageElement;
-	let mapMargin: number = 0;
-	let draggable: HTMLElement;
-	let mapSize: number = 100;
+	onMount(async () => {
+		// async import because import calls window
+		const L = await import('leaflet');
 
-	const mapSizeModifier: number = 10;
-	const maxZoom = 150;
-	const minZoom = 50;
+		const map = L.map('map').setView([51.7096757,11.1851883], 5);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+		map.setMaxZoom(9).setMinZoom(3);
 
-	$: if(realMapHeight) { preventMapOffScreen(); }
-	
-	onMount(() => {
-		mapHeight = map.naturalHeight;
+		/*
+		const marker = L.marker(markers[0].coords)
+			.bindTooltip('Planning the route')
+			.addTo(map);
+		 marker.addEventListener('click', () => dispatch('clicked', markers[0].id));
+		*/
+		var polyline = L.polyline(points.map(p => p.coords), {color: 'black', opacity: 1, className: 'no-click'}).addTo(map);
+		L.polyline([points[points.length-1].coords, [35.6786, 139.7637]], { color: 'black', dashArray: "15 10", opacity: 0.5}).addTo(map);
+		map.fitBounds(polyline.getBounds()); // Zoom map out to see entire route
+
+		for (const point of points) {
+			const circleMarker = L.circleMarker(point.coords, {
+				color: point.clickable ? 'var(--blue)' : 'black',
+				fillColor: point.clickable ? 'var(--orange)' : 'white',
+				fillOpacity: 1,
+				radius: 5,
+				className: point.clickable ? 'point' : 'no-click point'
+			})
+			.bindTooltip(point.hoverText)
+			.addTo(map);
+			if (point.clickable) {
+				circleMarker.addEventListener('click', () => {
+					dispatch('point-click', point.articleId);
+				});
+			}
+		}
 	});
-
-	function onMouseDown(e: Event) {
-		if (e.target !== draggable && (e.target as HTMLElement).tagName !== 'CANVAS' && (e.target as HTMLElement).getAttribute('data-clickable') === 'true') {
-			return;
-		}
-		moving = true;
-	}
-
-	function onScroll(e: WheelEvent) {
-		e.preventDefault();
-
-		if (e.deltaY < 0 && mapSize + mapSizeModifier < maxZoom) {
-			// zoom in
-			mapSize += mapSizeModifier;
-		} else if (e.deltaY > 0 && mapSize - mapSizeModifier > minZoom) {
-			// zoom out
-			mapSize -= mapSizeModifier;
-		}
-	}
-	
-	function onMouseMove(e: MouseEvent) {
-		if (!moving) return;
-	
-		left += e.movementX;
-		top += e.movementY;
-		preventMapOffScreen();
-	}
-
-	function preventMapOffScreen() {
-		if (!container) return;
-
-		//console.log(container.clientHeight * (mapSize/100), 'x', container.clientWidth * (mapSize/100));
-		console.log(map.clientHeight, 'x', map.clientWidth);
-		
-		if (left > 0 + mapMargin) {
-			left = 0 + mapMargin;
-		}
-		if (top > 0 + mapMargin) {
-			top = 0 + mapMargin;
-		}
-		if (left < -map.clientWidth - mapMargin + container.clientWidth) {
-			left = -map.clientWidth - mapMargin + container.clientWidth;
-		}
-		if (top < -map.clientHeight - mapMargin + container.clientHeight) {
-			top = -map.clientHeight - mapMargin + container.clientHeight;
-			console.log(-map.clientHeight, '+', container.clientHeight, '=', top);
-		}
-	}
-	
-	function onMouseUp() {
-		moving = false;
-	}
 </script>
 
 <style>
-	.drag-container {
-		position: relative;
-		background-color: var(--blue);
-		overflow: hidden;
-		height: 100%;
-		width: 100%;
+	#map {
+		height: calc(100dvh - var(--header-height));
 	}
 
-	.draggable {
-		user-select: none;
-		cursor: move;
-		border: solid 1px gray;
-		position: absolute;
+	:global(.no-click) {
+		cursor: grab;
 	}
 
-	img {
-		display: grid;
-		pointer-events: none;
-		height: 100%;
-	}
-
-	.overlay {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
+	:global(.point) {
+		outline: none;
 	}
 </style>
