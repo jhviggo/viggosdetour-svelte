@@ -46,3 +46,6 @@ body {
 .blue {
   color: var(--blue);
 }
+.white {
+  color: white;
+}

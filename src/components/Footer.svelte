@@ -41,7 +41,7 @@
     width: 100%;
     background-color: var(--blue);
     padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-bottom: 5rem;
     gap: 2rem;
   }
 

@@ -1,4 +1,4 @@
-<div class="drawer" class:open={open}>
+<div class="drawer" style={`${side}: 0;`} class:open={open}>
   <div class="header">
     <div>
       <slot name="header" />
@@ -19,6 +19,7 @@
   const dispatch = createEventDispatcher();
 
   export let open: boolean = false;
+  export let side: 'left' | 'right' = 'right';
 
   function close() {
     dispatch('close');
@@ -31,8 +32,6 @@
     position: fixed;
     height: 100%;
     top: 0;
-    right: 0;
-    max-width: 50%;
     background-color: var(--blue);
     z-index: 20;
   }
@@ -40,13 +39,18 @@
   .header {
     display: grid;
     grid-template-columns: 1fr auto;
-    padding: 0.5rem;
+    height: var(--header-height);
+  }
+
+  .header div {
+    max-height: var(--header-height);
   }
 
   .close {
     border: unset;
     background-color: unset;
     padding: 0.5rem;
+    padding-right: 1.5rem;
   }
 
   .close icon {
@@ -60,7 +64,9 @@
     opacity: 0.5;
     width: 100%;
     height: 100%;
-    z-index: 4;
+    z-index: 19;
+    top: 0;
+    left: 0;
   }
 
   .open {

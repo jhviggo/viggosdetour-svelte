@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { markers, points } from '$lib/mapMarkers';
-    import type { LatLngExpression } from 'leaflet';
+	import type { LatLngExpression } from 'leaflet';
 
 	const dispatch = createEventDispatcher();
 
@@ -34,7 +34,7 @@
 				color: point.clickable ? 'var(--blue)' : 'black',
 				fillColor: point.clickable ? 'var(--orange)' : 'white',
 				fillOpacity: 1,
-				radius: 5,
+				radius: 7,
 				className: point.clickable ? 'point' : 'no-click point'
 			})
 			.bindTooltip(point.hoverText)
@@ -49,7 +49,7 @@
 				color: 'black',
 				fillColor: 'white',
 				fillOpacity: 1,
-				radius: 5,
+				radius: 7,
 				className: 'point'
 			})
 			.bindTooltip('Tokyo, Japan')

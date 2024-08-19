@@ -1,8 +1,10 @@
 <div class="page-content">
   <div class="map-area" bind:clientWidth={mapWidth}>
-    <div class="map-container" style="width: {mapWidth}px;">
-      <DraggableMap on:point-click={(e) => scrollToTimeline(e)} />
-    </div>
+    {#if mapWidth > 0}
+      <div class="map-container" style="width: {mapWidth}px;">
+        <DraggableMap on:point-click={(e) => scrollToTimeline(e)} />
+      </div>
+    {/if}
   </div>
   <div class="divider"></div>
   <div>
@@ -19,6 +21,23 @@
     {/each}
   </div>
 </div>
+
+<button class="mobile-map" on:click={() => (mapDrawerOpen = !mapDrawerOpen)}>
+  <icon class="material-symbols-outlined">
+    map
+  </icon>
+</button>
+
+<Drawer open={mapDrawerOpen} side="left" on:close={() => (mapDrawerOpen = !mapDrawerOpen)}>
+  <div slot="header" class="map-header">
+    <h1 class="white">The route</h1>
+  </div>
+  <div class="mobile-map-container" bind:clientWidth={mobileMapWidth}>
+    {#if mobileMapWidth > 0}
+      <DraggableMap on:point-click={(e) => scrollToTimeline(e)} />
+    {/if}
+  </div>
+</Drawer>
   
 <script lang="ts">
   import SideBySide from '$components/SideBySide.svelte';
@@ -26,9 +45,12 @@
   import { getTimelines, type Timeline } from '$lib/api'
   import DraggableMap from '$components/DraggableMap.svelte';
   import Banner from '$components/Banner.svelte';
+  import Drawer from '$components/Drawer.svelte';
 
   let timeline: Timeline[] = [];
   let mapWidth: number = 0;
+  let mobileMapWidth: number = 0;
+  let mapDrawerOpen: boolean = false;
 
   onMount(async (): Promise<any> => {
     timeline = await getTimelines();
@@ -64,6 +86,36 @@
     position: fixed;
   }
 
+  .mobile-map {
+    display: none;
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: var(--blue);
+  }
+
+  .mobile-map icon {
+    color: white;
+  }
+
+  .mobile-map-container {
+    width: 85dvw;
+  }
+
+  .map-header {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .map-header h1 {
+    margin: 0;
+    margin-left: 1rem;
+  }
+
   @media (max-width: 768px) {
     .page-content {
       display: block;
@@ -71,6 +123,11 @@
 
     .map-area {
       display: none;
+      width: 0;
+    }
+
+    .mobile-map {
+      display: block;
     }
   }
 </style>
