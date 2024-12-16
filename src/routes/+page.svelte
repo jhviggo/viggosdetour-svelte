@@ -22,11 +22,13 @@
   </div>
 </div>
 
-<button class="mobile-map" on:click={() => (mapDrawerOpen = !mapDrawerOpen)}>
-  See the route
-  <icon class="material-symbols-outlined">
-    map
-  </icon>
+<button class="mobile-map" on:click={toggleMobileMap}>
+  <div style:animation={pauseMobileMapAnimation ? '' : 'wiggle 2.5s infinite'}>
+    See the route
+    <icon class="material-symbols-outlined">
+      map
+    </icon>
+  </div>
 </button>
 
 <Drawer open={mapDrawerOpen} side="left" on:close={() => (mapDrawerOpen = !mapDrawerOpen)}>
@@ -52,6 +54,7 @@
   let mapWidth: number = 0;
   let mobileMapWidth: number = 0;
   let mapDrawerOpen: boolean = false;
+  let pauseMobileMapAnimation: boolean = false;
 
   onMount(async (): Promise<any> => {
     timeline = await getTimelines();
@@ -60,6 +63,11 @@
 
   function scrollToTimeline(event: CustomEvent) {
     document.querySelector(`#${event.detail}`)?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  }
+
+  function toggleMobileMap() {
+    mapDrawerOpen = !mapDrawerOpen
+    pauseMobileMapAnimation = true;
   }
 </script>
 
@@ -90,7 +98,6 @@
   .mobile-map {
     display: none;
     position: fixed;
-    color: white;
     font-weight: bold;
     width: 100%;
     height: 3rem;
@@ -98,7 +105,14 @@
     background-color: var(--blue);
   }
 
-  .mobile-map icon {
+  .mobile-map div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+
+  .mobile-map div icon {
     color: white;
     margin-left: 0.5rem;
   }
@@ -129,9 +143,7 @@
     }
 
     .mobile-map {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: block;
     }
   }
 </style>
