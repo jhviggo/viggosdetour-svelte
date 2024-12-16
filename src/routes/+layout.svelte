@@ -11,6 +11,8 @@
     </script>
   {/if}
 
+  <link rel="stylesheet" type="text/css" href="theme.css?{Math.random().toString(36).slice(2, 18)}" />
+
   <meta name="description" content="My motorcycle trip from Denmark To Japan. My name is Viggo, I'm a software engineer who decided to take my Master's in Japan and will be driving there. I'll be documenting how much it costs, how to get the carnet de passage and all the details on the way">
   <meta name="keywords" content="Travel, Motorcycle, Camping, Software Engineer, Viggo">
   <meta name="author" content="Viggo Petersen">
