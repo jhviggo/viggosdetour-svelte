@@ -23,6 +23,7 @@
 </div>
 
 <button class="mobile-map" on:click={() => (mapDrawerOpen = !mapDrawerOpen)}>
+  See the route
   <icon class="material-symbols-outlined">
     map
   </icon>
@@ -89,16 +90,17 @@
   .mobile-map {
     display: none;
     position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+    height: 3rem;
+    bottom: 0;
     background-color: var(--blue);
   }
 
   .mobile-map icon {
     color: white;
+    margin-left: 0.5rem;
   }
 
   .mobile-map-container {
@@ -127,7 +129,9 @@
     }
 
     .mobile-map {
-      display: block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 </style>
